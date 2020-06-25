@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package userservice;
+
+service UserLoginService
+{
+	rpc UserRegister (LoginRequest) returns (TokenReply) {}
+	rpc UserLogin (LoginRequest) returns (TokenReply) {}
+	rpc TokenCheck (TokenCheckRequest) returns (TokenCheckReply) {}
+}
+
+message LoginRequest {
+	string userId = 1;
+	string password = 2;
+	string deviceId = 3;
+	string onece = 4;
+	string signature = 5;
+}
+
+message TokenReply {
+	string token = 1;
+}
+
+message TokenCheckRequest {
+	string token = 1;
+}
+
+message TokenCheckReply {
+	int32 flag = 1;
+}
