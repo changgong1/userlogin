@@ -14,9 +14,9 @@ using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
 using grpc::Status;
-using userservice::HelloRequest;
-using userservice::HelloReply;
-using userservice::Greeter;
+using helloworld::HelloRequest;
+using helloworld::HelloReply;
+using helloworld::Greeter;
  
 // Logic and data behind the server's behavior.
 class GreeterServiceImpl final : public Greeter::Service {

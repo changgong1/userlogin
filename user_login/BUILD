@@ -18,8 +18,8 @@ cc_library(
 
 cc_library(
     name = "helloworld_proto",
-    srcs = ["//proto:helloworld.grpc.pb.h"],
-    hdrs = ["//proto:helloworld.grpc.pb.h"],
+    srcs = ["//proto:helloworld.grpc.pb.cc"],
+    hdrs = ["//proto:elloworld.grpc.pb.h"],
 )
 
 cc_binary(
@@ -35,7 +35,7 @@ cc_binary(
     name = "helloworld_service",
     srcs = ["helloworld_service.cc"],
     deps = [
-        ":cc_hello_proto"
+        "//proto:proto_helloworld"
     ],
 )
 
@@ -43,6 +43,6 @@ cc_binary(
     name = "helloworld_client",
     srcs = ["helloworld_client.cc"],
     deps = [
-        ":cc_hello_proto"
+        "//proto:proto_helloworld"
     ],
 )

@@ -8,3 +8,20 @@ proto_library(
         "//visibility:public",
     ],
 )
+
+cc_library(
+    name = "proto_cc_helloworld",
+    srcs = ["helloworld.pb.cc"],
+    hdrs = ["helloworld.pb.h"],
+    visibility = ["//user_login:__pkg__"],
+)
+
+cc_library(
+    name = "proto_helloworld",
+    srcs = ["helloworld.grpc.pb.cc"],
+    hdrs = ["helloworld.grpc.pb.h"],
+    deps = [
+        ":proto_cc_helloworld",
+    ],
+    visibility = ["//user_login:__pkg__"],
+)
