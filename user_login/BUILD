@@ -46,3 +46,48 @@ cc_binary(
         "//proto:proto_helloworld"
     ],
 )
+
+# userService
+
+cc_library(
+    name = "mysqlDriver",
+     srcs = ["libmysqlclient.so","libmysqlclient_r.so"],
+    hdrs = glob(["include/**/*.h"]),
+)
+
+cc_library(
+    name = "mysqlpool",
+    srcs = ["mysqlpool.cc"],
+    hdrs = ["mysqlpool.h"],
+    deps = [
+        ":mysqlDriver",
+    ],
+    copts = ["-Isrc/include"],
+)
+
+
+cc_library(
+    name = "hiredisDriver",
+    srcs = ["libhiredis.so","libhiredis.a"],
+    hdrs = glob(["include/**/*.h"]),
+)
+
+cc_library(
+    name = "redispool",
+    srcs = ["redispool.cc"],
+    hdrs = ["redispool.h"],
+    deps = [
+        ":hiredisDriver",
+    ],
+    #copts = ["-Isrc/include"],
+)
+
+cc_binary(
+    name = "userlogin_service",
+    srcs = ["userlogin_service.cc"],
+    deps = [
+        ":mysqlpool",
+        "redispool",
+        "//proto:proto_user_login",
+    ],
+)

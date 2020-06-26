@@ -212,7 +212,7 @@ MysqlPool::~MysqlPool()
   }
 }
 
-bool MysqlPool::GetUserInfoByUserId(const char* userId, std::vector<stUserLogin> *result)
+bool MysqlPool::GetUserInfoByUserId(const char* userId, std::vector<stUserLogin> &result)
 {
   char selSql[200] = {'\0'};
   sprintf(selSql, "SELECT user_id, password FROM user_info WHERE user_id ='%s'", userId);
@@ -233,7 +233,7 @@ bool MysqlPool::GetUserInfoByUserId(const char* userId, std::vector<stUserLogin>
           stUserLogin userLogin;
           userLogin.userId = row[0];
           userLogin.passwordChar = row[1];
-          result->push_back(userLogin);
+          result.push_back(userLogin);
         }
     }
     if (res != NULL)
@@ -241,7 +241,7 @@ bool MysqlPool::GetUserInfoByUserId(const char* userId, std::vector<stUserLogin>
       mysql_free_result(res);
     }
   }
-  return true
+  return true;
 }
 
 bool MysqlPool::AddUserInfo(const stUserLogin* userlogin)
@@ -249,13 +249,13 @@ bool MysqlPool::AddUserInfo(const stUserLogin* userlogin)
   MYSQL* conn = getOneConnect();
 
   char intSql[200] = {'\0'};
-  sprintf(intSql, "insert into user_info (user_id,password_char) values (?, ?)", userlogin->userId, userlogin->passwordChar);
+  sprintf(intSql, "insert into user_info (user_id,password_char) values (%s, %s)", userlogin->userId, userlogin->passwordChar);
  
   int ret = mysql_query(conn, intSql);
   if (ret != 0)
 	{
 		std::cout << "insert user_info was Error:" << mysql_error(conn) << std::endl;
-    return false
+    return false;
   }
-  return true
+  return true;
 }

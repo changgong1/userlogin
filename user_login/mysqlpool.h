@@ -59,7 +59,7 @@ class MysqlPool {
     static MysqlPool* mysqlpool_object;           //类的对象
 
   public:
-    bool MysqlPool::GetUserInfoByUserId(const char* userId, std::vector<stUserLogin> *result);
+    bool GetUserInfoByUserId(const char* userId, std::vector<stUserLogin>& result);
     bool AddUserInfo(const stUserLogin* userlogin);
 };
 

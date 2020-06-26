@@ -2,7 +2,7 @@
 #include <memory>
 #include <string>
 #include "mysqlpool.h"
-#include "redis.h"
+#include "redispool.h"
  
 #include <grpcpp/grpcpp.h>
 
@@ -33,18 +33,19 @@ using userservice::LoginRequest;
 using userservice::TokenReply;
 using userservice::TokenCheckRequest;
 using userservice::TokenCheckReply;
+using userservice::UserLoginService;
 
 // Logic and data behind the server's behavior.
 class UserLoginServiceImpl final : public UserLoginService::Service {
     Status UserRegister(ServerContext* context, const LoginRequest* request,
                     TokenReply* reply) override {
         std::cout << "Received:" << request->userid() << std::endl;
-        std::vector<stUserLogin> *p_userInfo;
-        bool flat = mysql->GetUserInfoByUserId(request->userid().c_str(), p_userInfo);
-        if !flag || p_userInfo != NULL {
-            return Status::NOT_FOUND;
+        std::vector<stUserLogin> p_userInfo;
+        bool flag = mysql->GetUserInfoByUserId(request->userid().c_str(), p_userInfo);
+        if (!flag) {
+            return Status::CANCELLED;
         }
-        reply->set_token(prefix + request->userid());
+        reply->set_token(request->userid());
         return Status::OK;
     }
 
@@ -55,7 +56,7 @@ public:
     }
 private:
     MysqlPool* mysql;
-    Redis* redis;
+    RedisPool* redis;
 };
 
 void RunServer(MysqlPool* mysql,RedisPool* redis) {
@@ -83,6 +84,8 @@ int main(int argc, char** argv) {
     MysqlPool *mysql = MysqlPool::getMysqlPoolObject();
     mysql->setParameter(MYSQL_ADDRESS,MYSQL_USRNAME,MYSQL_USRPASSWORD,MYSQL_USEDB,MYSQL_PORT,NULL,0,MYSQL_MAX_CONNECTCOUNT);
 
+    RedisPool *redis = RedisPool::getRedisPoolObject();
+    redis->setParameter(REDIS_ADDRESS,REDIS_PORT,NULL,0,REDIS_MAX_CONNECTCOUNT);
     RunServer(mysql, redis);
 
     delete mysql;
